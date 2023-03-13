@@ -1,0 +1,322 @@
+<div *ngIf="recetas">
+    <div class="row mb-3">
+        <div class="col-md-4 offset-md-4">
+            <input type="search" class="form-control" placeholder="Buscador..." [(ngModel)]="searchTerm" />
+        </div>
+    </div>
+
+    <div class="table-responsive small">
+        <table class="table table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Doctor</th>
+                    <th scope="col">Folio</th>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Paciente</th>
+                    <th scope="col">Edad</th>
+                    <th scope="col">Sexo</th>
+                    <th scope="col">Diagnóstico</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let receta of recetas | searchFilter: searchTerm; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{receta.rec_doctor}}</td>
+                    <td class="text-danger"><b>{{ receta.rec_folio }}</b></td>
+                    <td>
+                        {{ receta.rec_fecha }}
+                        <br>
+                        {{ receta.rec_hora }}
+                    </td>
+                    <td>{{ receta.rec_paciente }}</td>
+                    <td>{{ receta.rec_edad }}</td>
+                    <td>{{ receta.rec_sexo }}</td>
+                    <td>{{ receta.rec_diagnostico }}</td>
+                    <td>
+                        <!-- <button class="btn btn-sm btn-light" (click)="showModal(receta)">Ver</button> -->
+                        <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="showModal(receta)">Ver</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">RECETA</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+
+        <div class="container areaPdf" *ngIf="receta && doctor">
+
+            <table border="0" width="100%">
+                <tr>
+                    <td>
+                        <img src="{{ doctor.per_id == 5 ? logo_uag : logo_ujat  }}" width="60">
+                    </td>
+                    <td align="center">
+                        <b class="text-uppercase" style="font-size: x-large; color: #1f4e78;">DR {{ doctor.per_nombre}}</b>
+                        <br>
+                        <b class="small_pdf"><em>{{ doctor.per_universidad}}</em></b>
+                        <br>
+                        <div class="small_pdf">
+                            <span>Cedula Prof: {{ doctor.per_clave_documento}}</span>
+                            <br/>
+                            <span>MEDICINA GENERAL Y URGENCIAS</span>
+                            <br/>
+                            <span>AQUILES CALDERON MARCHENA No 63 COL. GAVIOTAS SUR VHSA TABASCO</span>
+                            <br/>
+                            <span>CEL: {{ doctor.per_telefono}} <b> {{ doctor.per_id == 5 ? '' : 'AFILIADO AL COLEGIO MEDICO DE TABASCO'}} </b></span>
+                            <br/>
+                        </div>
+                    </td>
+                    <td align="right">
+                        <img src="{{ logo_empresa }}" width="100">
+                    </td>
+                </tr>
+            </table>
+
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td width="150">
+                        <b>
+                            FOLIO/RECETA
+                            <span style="color:red;">
+                                {{ receta.rec_folio }}
+                            </span>
+                        </b>
+                    </td>
+                    <td align="center">
+                        <b>
+                            FECHA {{ receta.rec_fecha }} {{ receta.rec_hora }}
+                        </b>
+                    </td>
+                    <td width="60">
+                        <b>
+                            ALERGIAS
+                        </b>
+                    </td>
+                    <td align="right" class="small_pdf" style="color: red;">
+                        <small>
+                            {{ receta.rec_alergias }}
+                        </small>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <b>
+                            NOMBRE
+                        </b>
+                    </td>
+                    <td>
+                        {{ receta.rec_paciente }}
+                    </td>
+                    <td colspan="2">
+                        <table width="100%" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td>
+                                    <b>
+                                        TEMP
+                                    </b>
+                                    <span style="color: #1f4e78;">
+                                        {{ receta.rec_temp }} C&ordm;
+                                    </span>
+                                </td>
+                                <td align="right">
+                                    <b>PESO</b>
+                                    <span style="color: #1f4e78;">
+                                        {{ receta.rec_peso }} KG
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                
+                </tr>
+
+                <tr>
+                    <td>
+                        <b>
+                            EDAD
+                        </b>
+                    </td>
+                    <td>
+                        {{ receta.rec_edad }}
+                    </td>
+                    <td colspan="2">
+                        <table width="100%" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td>
+                                    <b>
+                                        SAT
+                                    </b>
+                                    <span style="color: #1f4e78;">
+                                        {{ receta.rec_sat }} %
+                                    </span>
+                                </td>
+                                
+                                <td align="right">
+                                    <b>TALLA</b>
+                                    <span style="color: #1f4e78;">
+                                        {{ receta.rec_estatura }} CM
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <b>
+                            SEXO
+                        </b>
+                    </td>
+                    <td>
+                        {{ receta.rec_sexo }}
+                    </td>
+                    <td colspan="2">
+                        <table width="100%" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td>
+                                    <b>
+                                        T/A
+                                    </b>
+                                    <span style="color: #1f4e78;">
+                                        {{ receta.rec_ta }}
+                                    </span>
+                                </td>
+                                
+                                <td align="right">
+                                    <b>IMC</b>
+                                    <span style="color: #1f4e78;">
+                                        {{ receta.rec_imc }}
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <b>
+                            DIAGNÓSTICO
+                        </b>
+                    </td>
+                    <td width="55%" class="{{ (strlen($model->rec_diagnostico) > 60) ? 'small_pdf' : '' ?>">
+                        {{ receta.rec_diagnostico }}
+                    </td>
+                    <td>
+                        <b>
+                            DXTX
+                        </b>
+                        <span style="color: #1f4e78;">
+                            {{ receta.rec_dxtx }}
+                        </span>
+                    </td>
+                    <td>
+                        
+                    </td>
+                </tr>
+
+            </table>
+
+            <table width="100%" border="" cellspacing="0" cellpadding="0" class="small_pdf" style="border: 1px solid #000;">
+                <tr style="background-color: #d9e1f2;">
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+                    <tr *ngFor="let medicamento of receta.medicamentos">
+                        <td width="500" style="border-top: 1px solid #000; border-left: 1px solid #000;">
+                            {{ medicamento.med_nombre }}
+                        </td>
+                        <td style="border-top: 1px solid #000;">
+                            {{ medicamento.med_presentacion }}
+                            <br>
+                            {{ medicamento.med_medicamento }}
+                        </td>
+                        <td style="border-top: 1px solid #000; border-right: 1px solid #000;">
+                            {{ medicamento.rm_dosis }}
+                        </td>
+                    </tr>
+
+            </table>
+
+            <div class="small2_pdf" style="color:red;">
+            <b>
+            NO PRODUCTOS DE PHARMALIFE/FUNDACIÓN BEST. 10% DE DESCUENTO AL SURTIR SU RECETA EN SU TOTALIDAD.
+            </b>
+            <br>
+            </div>
+
+            <!-- FOOTER -->
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="">
+
+                <tr>
+                    <td width="500" class="small2_pdf">
+                        <b>
+                            {{ receta.rec_recomendacion }}
+                        </b>
+                    </td>
+                    <td align="" class="text-center">
+
+                        <br>
+                        ____________________________________
+                        <br>
+                        <span class="text-uppercase">
+                            DR {{ doctor.per_nombre}}
+                        </span>
+                    </td>
+                </tr>
+
+            </table>
+
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+        <button id="printPdf" class="btn btn-primary" (click)="printPdf()">Imprimir</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+// $('#printPdf').on("click", function() {
+    // $('.areaPdf').printThis({
+        // importCSS: true,
+        // importStyle: true,
+    // });
+// });
+
+// $(function() {
+    // console.log('test jquery');
+    // $('#printPdf').trigger('click');
+// });
+</script>
